@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import Head from 'next/head'
+import Script from 'next/script'
 import { NextConfig } from 'next'
 import getConfig from 'next/config'
 import getCombinations from './lib/combinations'
@@ -117,40 +117,40 @@ export default function PlausibleProvider(props: {
 
   return (
     <>
-      <Head>
-        {enabled && (
-          <script
-            async
-            defer
-            data-api={proxyOptions ? getApiEndpoint(proxyOptions) : undefined}
-            data-domain={props.domain}
-            data-exclude={props.exclude}
-            src={
-              (proxyOptions ? '' : domain) +
-              getScriptPath(
-                {
-                  ...proxyOptions,
-                  scriptName: proxyOptions
-                    ? proxyOptions.scriptName
-                    : getRemoteScriptName(domain, props.selfHosted),
-                },
-                props.trackLocalhost ? 'local' : null,
-                props.manualPageviews ? 'manual' : null,
-                props.trackOutboundLinks ? 'outbound-links' : null,
-                props.exclude ? 'exclusions' : null
-              )
-            }
-            integrity={props.integrity}
-            crossOrigin={props.integrity ? 'anonymous' : undefined}
-            {...props.scriptProps}
-          />
-        )}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
-          }}
+      {enabled && (
+        <Script
+          strategy="beforeInteractive"
+          async
+          defer
+          data-api={proxyOptions ? getApiEndpoint(proxyOptions) : undefined}
+          data-domain={props.domain}
+          data-exclude={props.exclude}
+          src={
+            (proxyOptions ? '' : domain) +
+            getScriptPath(
+              {
+                ...proxyOptions,
+                scriptName: proxyOptions
+                  ? proxyOptions.scriptName
+                  : getRemoteScriptName(domain, props.selfHosted),
+              },
+              props.trackLocalhost ? 'local' : null,
+              props.manualPageviews ? 'manual' : null,
+              props.trackOutboundLinks ? 'outbound-links' : null,
+              props.exclude ? 'exclusions' : null
+            )
+          }
+          integrity={props.integrity}
+          crossOrigin={props.integrity ? 'anonymous' : undefined}
+          {...props.scriptProps}
         />
-      </Head>
+      )}
+      <Script
+        id="next-plausible-init"
+        dangerouslySetInnerHTML={{
+          __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
+        }}
+      />
       {props.children}
     </>
   )
