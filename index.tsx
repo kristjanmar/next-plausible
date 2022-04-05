@@ -8,6 +8,7 @@ type NextPlausibleProxyOptions = {
   subdirectory?: string
   scriptName?: string
   customDomain?: string
+  trailingSlash?: boolean
 }
 
 const allModifiers = [
@@ -42,7 +43,7 @@ const getDomain = (options: { customDomain?: string }) =>
   options.customDomain ?? plausibleDomain
 
 const getApiEndpoint = (options: NextPlausibleProxyOptions) =>
-  `/${options.subdirectory ?? 'proxy'}/api/event/`
+  `/${options.subdirectory ?? 'proxy'}/api/event${options.trailingSlash ? '/' : ''}`
 
 export function withPlausibleProxy(options: NextPlausibleProxyOptions = {}) {
   return (nextConfig: NextConfig): NextConfig => ({

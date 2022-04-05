@@ -93,7 +93,19 @@ module.exports = withPlausibleProxy({
 })
 ```
 
-This will load the script from `/js/yoursubdirectory/scriptName.js` and fetch it from `http://example.com/js/script.js`.
+  This will load the script from `/js/yoursubdirectory/scriptName.js` and fetch it from `http://example.com/js/script.js`.
+
+If you are using trailing slashes in your [NextJS configuration](https://nextjs.org/docs/api-reference/next.config.js/trailing-slash), then you should add this to your proxy configuration:
+
+```js
+const { withPlausibleProxy } = require('next-plausible')
+
+module.exports = withPlausibleProxy({
+  trailingSlash: true,
+})({
+  // ...your next js config, if any
+})
+```
 
 ### Send Custom Events
 
